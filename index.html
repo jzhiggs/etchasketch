@@ -1,0 +1,81 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Etch-A-Sketch</title>
+  </head>
+  <body style="background: black">
+    <div id="container">
+      
+    </div>
+    <button id="reset">Reset</button>
+
+  </body>
+</html>
+
+<script>
+const container = document.querySelector("#container");
+let divsPerSide = 4
+let divsTotal = divsPerSide * 4
+
+function createDivs(divsTotal) {
+  for (i=1; i<= divsTotal; i++) {
+let newDiv = document.createElement("div");
+newDiv.className = "grid";
+container.appendChild(newDiv);
+}} //loop to creates the divs to shade
+
+createDivs(divsTotal);
+
+function shade(target) {
+  let currentShade = window.getComputedStyle(target).getPropertyValue("filter");
+  let slice = currentShade.slice(11);
+  slice = slice.slice(0,-1);
+  if (slice == 0) {
+    return
+  } currentShade = "filter: brightness(" + (slice - 0.1) + ")";
+  target.style.cssText = currentShade;
+} //function to shade the divs
+
+let grid = document.querySelectorAll(".grid");
+
+function throwShade(grid) {
+  for (i=0; i<grid.length; i++) {
+  grid[i].addEventListener("mouseenter", (e) => shade(e.target));
+}} //loop function to add listener and shade function to each div
+
+throwShade(grid);
+
+function deleteDivs() {
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+}}
+function reload() {
+  deleteDivs();
+  divsPerSide = prompt("How many cells per side would you like?");
+  divsTotal = divsPerSide * divsPerSide;
+  container.style.gridTemplateColumns = "repeat(" + divsPerSide + ", auto)";
+  createDivs(divsTotal);
+  grid = document.querySelectorAll(".grid");
+  throwShade(grid);
+
+} //function to reload container with specified # of divs
+let resetBtn = document.querySelector("#reset");
+resetBtn.onclick = reload;
+
+container.style.cssText = "display: grid; grid-template-columns: repeat(4, auto); position: absolute; top: 0; left: 50%; margin-left: -400px; height: 800px; width: 800px"
+
+
+</script>
+<style>
+  .grid {
+    background: white;
+    filter: brightness(1);
+  }
+  #reset {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  </style>
